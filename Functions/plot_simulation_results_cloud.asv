@@ -1,0 +1,270 @@
+function plot_simulation_results_cloud(X,Exp_N,stoptime,steptime)
+
+addpath("Functions")
+if Exp_N ==2
+    X(6) = 1300;
+elseif Exp_N ==3
+    X(6)= 3500;
+end
+poolobj = gcp('nocreate');
+if ~isempty(poolobj)
+    delete(poolobj);
+end
+
+parpool
+
+parfor i=1:1:2
+    [dat,total] = MouseSim(round(X(6)),round(X(6)/X(1)),X(2),X(4),X(5),X(3),stoptime,steptime, X(7),X(8),X(9),X(10),X(11));
+    result(i,:) = total(:,2);
+    memory_result(i,:) = dat(:,16);
+    effector_result(i,:) = dat(:,17);
+end
+x = 0:0.1:648.1;
+index = 1:1:6481;
+
+T5_577 = [3572	23813	5628	1080];
+T8_577 = [1788298	1023024	393377	2242979];
+T12_577 = [215977	324719	252003	439938];
+T26_577 = [61763	0	3373	30576];
+
+T5_595 = [10043 7990 21534 15029 13352];
+T7_595 = [1157715 2906500 1817117 1316906 6245287];
+T9_595 = [644240 	 1186539 	 1391044 	 1502553 	 1815504];
+T13_595 = [342414	150124	285345	518698	372197];
+
+T5_669 = [1033	8510	884	4315	2691];
+T6_669 = [105051	378661	66169	228561	115788];
+T7_669 = [1218558	1084086	1386823	875512	822928];
+T8_669 = [2477171	1891390	5304399	3010945	2605985];
+T9_669 = [1171166	1671231	865215	1471098	2373170];
+T12_669 = [701722	968534	1268105	971808	910307];
+T25_669 = [227018	177750	14351	122582	277604];
+
+
+M5_577 = [48	116	146	9];
+M8_577 = [47698	46801	7650	22854];
+M12_577 = [13936	42083	18149	14359];
+M26_577 = [698	277	173];
+
+M5_595 = [0	4	4	0	5];
+M7_595 = [65824	152389	59295	62147	285309];
+M9_595 = [95737	125079	150220	110162	158026];
+M13_595 = [46489	53553	71585	52937	82990];
+
+M5_669 = [224	2634	236	646	1012];
+M6_669 = [5212	7045	6653	12292	2878];
+M7_669 = [45062	40704	57080	62137	22304];
+M8_669 = [74181	21550	81436	62344	99569];
+M9_669 = [51021	51571	45186	78051	121319];
+M12_669 = [58057	64886	50124	62892	56290];
+M25_669 = [10043	13976	1494	7471	20825];
+
+
+Ef5_577 = [609	6954	1952	62];
+Ef8_577 = [1519595	820118	312215	1951982];
+Ef12_577 = [175403	240310	203708	392471];
+Ef26_577 = [55599	2133	26548];
+
+Ef5_595 = [5456	4690	13002	7170	7371];
+Ef7_595 = [744955	1924391	1363486	882747	4442013];
+Ef9_595 = [403000	846926	962284	1182215	1382348];
+Ef13_595 = [340380	541334	863914	1018391	1142569];
+
+Ef5_669 = [87	919	24	611	120];
+Ef6_669 = [57925	233275	20688	103306	79505];
+Ef7_669 = [654048	557809	865168	423569	434923];
+Ef8_669 = [1508035	1322096	3587009	1844230	1501176];
+Ef9_669 = [1168221	2054125	807978	1302932	2522439];
+Ef12_669 = [409792	586709	790488	595869	537047];
+Ef25_669 = [158044	97135	7461	72794	161462];
+
+time(1:26) = ((1:1:26)+1)*24;
+
+if Exp_N == 1
+    figure
+    scatter(x(index),(result(:,index)),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),T5_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(6),T6_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(7),T7_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(8),T8_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(9),T9_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(12),T12_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(25),T25_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    legend("Simulation Results Total OT-I T Cell","Experimental Results-Training Set Case 1")
+    title("Total OT-I Cell")
+    ylabel("Number of Total OT-I cell")
+    xlabel("Time (Days Post Immunization)")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+
+    figure
+    scatter(x(index),memory_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),M5_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    scatter(time(6),M6_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    scatter(time(7),M7_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    scatter(time(8),M8_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    scatter(time(9),M9_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor","#EDB120")
+    scatter(time(12),M12_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    scatter(time(25),M25_669,90,'o','MarkerFaceColor',"#EDB120","MarkerEdgeColor",'#EDB120')
+    legend("Simulation Results Total Memory Precursor OT-I T Cell","Experimental Results-Training Set Case 1")
+    title("Total Memory Precursor OT-I T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Memory Precursor OT-I T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+    figure
+    scatter(x(index),effector_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),Ef5_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(6),Ef6_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(7),Ef7_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(8),Ef8_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(9),Ef9_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(12),Ef12_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    scatter(time(25),Ef25_669,90,'o','MarkerFaceColor',"#FF0000","MarkerEdgeColor","#FF0000")
+    legend("Simulation Results Total Effector T Cell","Experimental Results-Training Set Case 1")
+    title("Total Effector T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Effector T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+end
+
+if Exp_N == 2
+    figure
+    scatter(x(index),(result(:,index)),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),T5_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(8),T8_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(12),T12_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(26),T26_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    legend("Simulation Results Total OT-I T Cell","Experimental Results-Testing Set Case 2")
+    title("Total OT-I Cell")
+    ylabel("Number of Total OT-I cell")
+    xlabel("Time (Days Post Immunization)")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+    figure
+    scatter(x(index),memory_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),M5_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(8),M8_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(12),M12_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(26),M26_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    legend("Simulation Results Total Memory Precursor OT-I Cell","Experimental Results-Testing Set Case 2")
+    title("Total Memory Precursor OT-I T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Memory Precursor OT-I T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+    figure
+    scatter(x(index),effector_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),Ef5_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(8),Ef8_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(12),Ef12_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    scatter(time(26),Ef26_577,90,'o','MarkerFaceColor',"#0072BD","MarkerEdgeColor",'#0072BD')
+    legend("Simulation Results Total Effector Cell","Experimental Results-Testing Set Case 2")
+    title("Total Effector T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Effector T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+end
+
+if Exp_N == 3
+    figure
+    scatter(x(index),(result(:,index)),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),T5_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(7),T7_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(9),T9_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(13),T13_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    legend("Simulation Results Total T Cell","Experimental Results-Testing Set Case 3")
+    title("Total OT-I Cell")
+    ylabel("Number of Total OT-I cell")
+    xlabel("Time (Days Post Immunization)")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+    figure
+    scatter(x(index),memory_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),M5_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(7),M7_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(9),M9_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(13),M13_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    legend("Simulation Results Total Memory Precursor OT-I Cell","Experimental Results-Testing Set Case 3")
+    title("Total Memory Precursor OT-I T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Memory Precursor OT-I T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+
+    figure
+    scatter(x(index),effector_result(:,index),10,'o','MarkerFaceColor','black','MarkerEdgeColor','none','MarkerFaceAlpha','0.01')
+    hold on
+    scatter(time(5),Ef5_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(7),Ef7_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(9),Ef9_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    scatter(time(13),Ef13_595,90,'o','MarkerFaceColor',"#D95319","MarkerEdgeColor",'#D95319')
+    legend("Simulation Results Total Effector Cell","Experimental Results-Testing Set Case 3")
+    title("Total Effector T Cell")
+    xlabel("Time (Days Post Immunization)")
+    ylabel("Number of Effector T Cell")
+    custom_xticks = [0,144, 168, 192, 216, 240, 312, 336, 624];
+    custom_xticklabels = ["-1","5","6","7", "8","9","12","13","25"];
+    xticks(custom_xticks);
+    xticklabels(custom_xticklabels);
+    xlim([0 649])
+    ax = gca;
+    ax.FontSize = 20;
+end
+
+end
